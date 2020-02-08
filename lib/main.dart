@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'zhihu_banner.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -28,44 +30,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-
-      _counter++;
-    });
-  }
+  double screenWidth;
+  double screenHeight;
 
   @override
   Widget build(BuildContext context) {
+
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
 
         title: Text(widget.title),
       ),
-      body: Center(
-
+      body: SingleChildScrollView(
         child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            //up content
+            SizedBox(
+              height: 800,
+              width: screenWidth
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
+
+            //switch banner
+            ZhiHuSwitchBanner(),
+
+            //bottom content
+            SizedBox(
+              height: 800,
+              width: screenWidth,
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+
     );
   }
 }
