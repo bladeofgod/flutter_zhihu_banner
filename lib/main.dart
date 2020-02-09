@@ -34,7 +34,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   double screenWidth;
   double screenHeight;
 
+  MyOvalClipper _myOvalClipper;
+
   ScrollController _scrollController;
+  double threshold = 300;
+  double ratio = 0;
   double currentPosition = 0;
   bool scrollUp = false;
 
@@ -42,8 +46,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    _myOvalClipper = MyOvalClipper(0);
+
     _scrollController = ScrollController();
     _scrollController.addListener((){
+      print("scroll offset :  ${_scrollController.offset}");
       if(_scrollController.offset > currentPosition){
         //scroll down
         scrollUp = false;
@@ -52,6 +60,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         scrollUp = true;
         currentPosition = _scrollController.offset;
       }
+      if(currentPosition > 300){
+        ratio = 1;
+      }else{
+        ratio = currentPosition / 300;
+      }
+      setState(() {
+        print("ratio : $ratio");
+        _myOvalClipper = MyOvalClipper(ratio);
+      });
     });
   }
 
@@ -67,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: <Widget>[
             //up content
@@ -80,7 +98,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
             //switch banner
             //ZhiHuSwitchBanner(),
-            Image.asset("assets/above.png",width: screenWidth,fit: BoxFit.fill,),
+            Stack(
+              children: <Widget>[
+                Image.asset("assets/below.png",width: screenWidth,fit: BoxFit.fill,),
+                ClipPath(
+                  clipper: _myOvalClipper,
+                  child: Image.asset("assets/above.png",width: screenWidth,fit: BoxFit.fill,),
+                ),
+              ],
+            ),
+
+
 
             //bottom content
             SizedBox(
@@ -96,4 +124,39 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     );
   }
+}
+
+class MyOvalClipper extends CustomClipper<Path>{
+  final double ratio;
+
+
+  MyOvalClipper(this.ratio);
+
+  @override
+  Path getClip(Size size) {
+    // TODO: implement getClip
+    print("size info : ${size.width}     ${size.height}");
+    double width = size.width;
+    double height = size.height;
+
+    double radius = width * ratio;
+    Path path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(0, height * ratio);
+    path.arcToPoint(Offset(width * ratio,0),clockwise: false,radius: Radius.circular(radius));
+    path.close();
+
+//    path.lineTo(width, 0);
+//    path.lineTo(width, height);
+//    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return ratio != (oldClipper as MyOvalClipper).ratio;
+  }
+
 }
