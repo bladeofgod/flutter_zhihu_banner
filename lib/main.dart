@@ -29,10 +29,31 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   double screenWidth;
   double screenHeight;
+
+  ScrollController _scrollController;
+  double currentPosition = 0;
+  bool scrollUp = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener((){
+      if(_scrollController.offset > currentPosition){
+        //scroll down
+        scrollUp = false;
+        currentPosition = _scrollController.offset;
+      }else{
+        scrollUp = true;
+        currentPosition = _scrollController.offset;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,17 +71,24 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             //up content
             SizedBox(
-              height: 800,
-              width: screenWidth
+              height: 500,
+              width: screenWidth,
+              child: Container(
+                color: Colors.red,
+              ),
             ),
 
             //switch banner
-            ZhiHuSwitchBanner(),
+            //ZhiHuSwitchBanner(),
+            Image.asset("assets/above.png",width: screenWidth,fit: BoxFit.fill,),
 
             //bottom content
             SizedBox(
-              height: 800,
+              height: 500,
               width: screenWidth,
+              child: Container(
+                color: Colors.yellowAccent,
+              ),
             ),
           ],
         ),
