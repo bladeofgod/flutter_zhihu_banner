@@ -60,10 +60,10 @@ class _MyHomePageState extends State<MyHomePage>  {
         scrollUp = true;
         currentPosition = _scrollController.offset;
       }
-      if(currentPosition > 300){
+      if(currentPosition > threshold){
         ratio = 1;
       }else{
-        ratio = currentPosition / 300;
+        ratio = currentPosition / threshold;
       }
       setState(() {
         print("ratio : $ratio");
