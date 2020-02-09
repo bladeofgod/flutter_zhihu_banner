@@ -142,8 +142,8 @@ class MyOvalClipper extends CustomClipper<Path>{
     double radius = width * ratio;
     Path path = Path();
     path.moveTo(0, 0);
-    path.lineTo(0, height * ratio);
-    path.arcToPoint(Offset(width * ratio,0),clockwise: false,radius: Radius.circular(radius));
+    path.lineTo(0, radius);
+    path.arcToPoint(Offset(radius,0),clockwise: false,radius: Radius.circular(radius));
     path.close();
 
 //    path.lineTo(width, 0);
